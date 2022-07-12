@@ -17,7 +17,7 @@ public class MySingleton {
         ctx = context;
         requestQueue = getRequestQueue();
 
-    }
+    }//BRO
 
     public static synchronized MySingleton getInstance(Context context) {
         if (instance == null) {//instance is does this exist already

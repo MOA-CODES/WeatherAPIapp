@@ -78,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                         MySingleton.getInstance(MainActivity.this).addToRequestQueue(request);
+                        //I LITERALLY MADE A LOT OF CHANGES RN
+
                         //the singleton handles multiple things happening at the same time in sequential order
                         //i think this gets every request in order from a class and adds it to a queue
                         //queue.add(request);
