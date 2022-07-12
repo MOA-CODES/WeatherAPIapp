@@ -31,17 +31,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getcityID();setById();setByName();
+        dataInput = findViewById(R.id.DataInput);
     }
 
     public void getcityID(){
         Button b = findViewById(R.id.btn_getcityid);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //WORKING WITH api
-                        // Instantiate the RequestQueue.
-                        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-                        String url = "https://api.openweathermap.org/data/2.5/weather?q=Lagos&appid=d2539c28d2cabd93c3974ad4760320e8";
+            public void onClick(View view) {//WORKING WITH api
+                        /* Instantiate the RequestQueue.
+                       RequestQueue queue = Volley.newRequestQueue(MainActivity.this);*/
+                        String url = "https://api.openweathermap.org/data/2.5/weather?q="+dataInput.getText().toString()+"&appid=d2539c28d2cabd93c3974ad4760320e8";
 
                         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                             @Override
@@ -50,9 +50,18 @@ public class MainActivity extends AppCompatActivity {
                                 String ci = "";
 
                                 try {
-                                    JSONObject cityInfo = response.getJSONObject("coord");
-                                    // JSONArray DI = response.getJSONArray();
-                                    ci = cityInfo.getString("lat");
+                                   //JSONObject cityInfo = response.getJSONObject("coord");
+                                   //   ci = cityInfo.getString("lat");
+
+                                    // JSONObject cityInfo = response.getJSONObject("main");
+                                    // ci = cityInfo.getString("temp");
+
+                                    //JSONArray CTI = response.getJSONArray("weather");
+                                    //ci = CTI.toString();
+                                    //Integer CTI = response.getInt("cod");
+                                   // ci = CTI.toString();
+                                    String CTI = response.getString("id");
+                                    ci = CTI.toString();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -67,7 +76,11 @@ public class MainActivity extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 Toast.makeText(MainActivity.this, "Something Wrong",Toast.LENGTH_LONG).show();
                             }
-                        });queue.add(request);
+                        });
+                        MySingleton.getInstance(MainActivity.this).addToRequestQueue(request);
+                        //the singleton handles multiple things happening at the same time in sequential order
+                        //i think this gets every request in order from a class and adds it to a queue
+                        //queue.add(request);
 //                // Request a string response from the provided URL.
 //                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
 //                        new Response.Listener<String>() {
