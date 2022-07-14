@@ -25,6 +25,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
     EditText dataInput;
     ListView lvReport;
+   final WeatherDataService WDS = new WeatherDataService(MainActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,73 +33,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getcityID();setById();setByName();
         dataInput = findViewById(R.id.DataInput);
+
     }
 
     public void getcityID(){
         Button b = findViewById(R.id.btn_getcityid);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {//WORKING WITH api
-                        /* Instantiate the RequestQueue.
-                       RequestQueue queue = Volley.newRequestQueue(MainActivity.this);*/
-                        String url = "https://api.openweathermap.org/data/2.5/weather?q="+dataInput.getText().toString()+"&appid=d2539c28d2cabd93c3974ad4760320e8";
+            public void onClick(View view) {
 
-                        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
 
-                                String ci = "";
+                //this doesnt return anything
+               WDS.getCityID(dataInput.getText().toString(), new WeatherDataService.VolleyResponseListener() {
+                   //the volleyresponse listener is an interface with two functions that have one parameter each, so they get those
+                   //values from the weatherdataservice classes and we use them here
+                   @Override
+                   public void onError(String message) {
+                       Toast.makeText(MainActivity.this, message,Toast.LENGTH_LONG).show();
+                   }
 
-                                try {
-                                   //JSONObject cityInfo = response.getJSONObject("coord");
-                                   //   ci = cityInfo.getString("lat");
+                   @Override
+                   public void onResponse(String cityID) {
+                       Toast.makeText(MainActivity.this, "returned an id of= "+cityID,Toast.LENGTH_LONG).show();
+                   }
+               });
 
-                                    // JSONObject cityInfo = response.getJSONObject("main");
-                                    // ci = cityInfo.getString("temp");
 
-                                    //JSONArray CTI = response.getJSONArray("weather");
-                                    //ci = CTI.toString();
-                                    //Integer CTI = response.getInt("cod");
-                                   // ci = CTI.toString();
-                                    String CTI = response.getString("id");
-                                    ci = CTI.toString();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                                Toast.makeText(MainActivity.this, "city id = "+ci,Toast.LENGTH_LONG).show();
-
-                                // Toast.makeText(MainActivity.this, response.toString(),Toast.LENGTH_LONG).show();
-
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(MainActivity.this, "Something Wrong",Toast.LENGTH_LONG).show();
-                            }
-                        });
-                        MySingleton.getInstance(MainActivity.this).addToRequestQueue(request);
-                        //I LITERALLY MADE A LOT OF CHANGES RN
-
-                        //the singleton handles multiple things happening at the same time in sequential order
-                        //i think this gets every request in order from a class and adds it to a queue
-                        //queue.add(request);
-//                // Request a string response from the provided URL.
-//                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-//                        new Response.Listener<String>() {
-//                            @Override
-//                            public void onResponse(String response) {
-//                                Toast.makeText(MainActivity.this, response,Toast.LENGTH_LONG).show();
-//                            }
-//                        }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Toast.makeText(MainActivity.this, "ERROR OCCURED",Toast.LENGTH_LONG).show();
-//                    }
-//                });
-                        // Add the request to the RequestQueue.
-                        //queue.add(stringRequest);
-                    }
+            }
                 });
     }
     public void setById(){
@@ -106,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this,"yes",Toast.LENGTH_SHORT).show();
+                WDS.getCityForecastByID("5308655");
+
+
             }
         });
     }
