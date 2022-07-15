@@ -76,7 +76,7 @@ public class WeatherDataService {
     public void getCityForecastByID(String cityID, VRL_FORECAST_BY_ID VRL){
         String url = QUERY_FOR_FORECAST_BY_ID_1+cityID+QUERY_FOR_FORECAST_BY_ID_2;
 
-        List<WeatherReportModel> report= new ArrayList<> ();
+       // List<WeatherReportModel> WeatherReportModels= new ArrayList<> ();
         //get the json object
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -84,12 +84,17 @@ public class WeatherDataService {
               //  Toast.makeText(context, response.toString(),Toast.LENGTH_LONG).show();
 
                 try {
-                    //JSONObject weather = response.getJSONObject("weather");
+                    JSONObject weatherstuff = response;
+
+                    //Toast.makeText(context, weatherstuff.names().toString(),Toast.LENGTH_LONG).show();
+
+
                     WeatherReportModel model1 = new WeatherReportModel();
 
                     model1.setCoord(response.getJSONObject("coord"));
                     model1.setWeather(response.getJSONArray("weather"));
                     model1.setBase(response.getString("base"));
+                    model1.setMain(response.getJSONObject("main"));
                     model1.setVisibility(response.getInt("visibility"));
                     model1.setWind(response.getJSONObject("wind"));
                     model1.setClouds(response.getJSONObject("clouds"));
@@ -120,10 +125,54 @@ public class WeatherDataService {
 
     }
 
+    public interface VRL_FORECAST_BY_NAME {//call back
+        void onError(String message);
+
+        void onResponse(WeatherReportModel wrm);
+    }
+
+    public void getCityForecastByName(String cityName, VRL_FORECAST_BY_NAME VRL){
+        String url = QUERY_FOR_ID_1+cityName+QUERY_FOR_ID_2;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    WeatherReportModel model1 = new WeatherReportModel();
+
+                    model1.setCoord(response.getJSONObject("coord"));
+                    model1.setWeather(response.getJSONArray("weather"));
+                    model1.setBase(response.getString("base"));
+                    model1.setMain(response.getJSONObject("main"));
+                    model1.setVisibility(response.getInt("visibility"));
+                    model1.setWind(response.getJSONObject("wind"));
+                    model1.setClouds(response.getJSONObject("clouds"));
+                    model1.setDt(response.getInt("dt"));
+                    model1.setSys(response.getJSONObject("sys"));
+                    model1.setTimezone(response.getInt("timezone"));
+                    model1.setId(response.getInt("id"));
+                    model1.setName(response.getString("name"));
+                    model1.setCod(response.getInt("cod"));
+
+                    VRL.onResponse(model1);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VRL.onError("SOMETHING WRONG");
+            }
+        });
+
+        MySingleton.getInstance(context).addToRequestQueue(request);
+
+        //get each property and assign to a weather report object
 
 
-//    public List<WeatherReportModel> getCityForecastByName(String cityName){
-//
-//    }
+
+    }
 
 }

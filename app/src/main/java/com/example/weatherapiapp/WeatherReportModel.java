@@ -1,22 +1,10 @@
 package com.example.weatherapiapp;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class WeatherReportModel {
-//    "coord":{"lon":3.75,"lat":6.5833}, //JSON OBJECT
-//            "weather":[{"id":804,"main":"Clouds","description":"overcast clouds","icon":"04n"}],//JSON array
-//            "base":"stations",//string
-//            "main":{"temp":297.33,"feels_like":298.02,"temp_min":297.33,"temp_max":297.33,"pressure":1013,"humidity":85,"sea_level":1013,"grnd_level":1013},
-//            "visibility":10000,//JSON int
-//            "wind":{"speed":2.65,"deg":216,"gust":5.95},
-//            "clouds":{"all":88},
-//            "dt":1657649596,
-//            "sys":{"type":1,"id":1185,"country":"NG","sunrise":1657604166,"sunset":1657649081},
-//            "timezone":3600,
-//            "id":2332453,
-//            "name":"Lagos",
-//            "cod":200
     private JSONObject coord;
     private JSONArray weather;
     private String base;
@@ -50,25 +38,27 @@ public class WeatherReportModel {
         this.cod = cod;
     }
 
-    @Override
+
     public String toString() {
 
-        return "name="+name;
-// calm down      return "WeatherReportModel{" +
-//                "coord=" + coord +
-//                ", weather=" + weather +
-//                ", base='" + base + '\'' +
-//                ", main=" + main +
-//                ", visibility=" + visibility +
-//                ", wind=" + wind +
-//                ", clouds=" + clouds +
-//                ", dt=" + dt +
-//                ", sys=" + sys +
-//                ", timezone=" + timezone +
-//                ", id=" + id +
-//                ", name='" + name + '\'' +
-//                ", cod=" + cod +
-//                '}';
+      //  return "name="+name;
+ /*calm down */
+       try {
+            return "WeatherReport for "+name+"\n" +
+                          "\nID = " + id +
+                          "\nCountry = " + sys.getString("country") +
+                          "\nTimezone = " + timezone +
+                          "\nTemperature = " + main.getString("temp") +
+                       "\nVisibility = " + visibility +
+                          "\nWeather Main = " +getWeather().getString("main")+
+                        "\nWeather Description = " +getWeather().getString("description")+
+                          "\nWind = " + wind +
+                          "\nCoordinates = " + coord +
+                           '\n';
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "null";
     }
 
     public JSONObject getCoord() {
@@ -79,8 +69,8 @@ public class WeatherReportModel {
         this.coord = coord;
     }
 
-    public JSONArray getWeather() {
-        return weather;
+    public JSONObject getWeather() throws JSONException {
+        return weather.getJSONObject(0);
     }
 
     public void setWeather(JSONArray weather) {

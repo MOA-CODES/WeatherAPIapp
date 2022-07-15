@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,7 +25,7 @@ import org.json.JSONObject;
 //hmm
 public class MainActivity extends AppCompatActivity {
     EditText dataInput;
-    ListView lvReport;
+    TextView Report;
    final WeatherDataService WDS = new WeatherDataService(MainActivity.this);
 
     @Override
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getcityID();setById();setByName();
         dataInput = findViewById(R.id.DataInput);
+        Report = findViewById(R.id.ReportDisplay);
 
     }
 
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                    @Override
                    public void onResponse(String cityID) {
                        Toast.makeText(MainActivity.this, "returned an id of= "+cityID,Toast.LENGTH_LONG).show();
+                       Report.setText(dataInput.getText().toString()+"ID = "+cityID);
                    }
                });
 
@@ -76,11 +79,10 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(WeatherReportModel wrm) {
-                        Toast.makeText(MainActivity.this, wrm.getName().toString(),Toast.LENGTH_LONG).show();
+                       // Toast.makeText(MainActivity.this, wrm.toString(),Toast.LENGTH_LONG).show();
+                        Report.setText(wrm.toString());
                     }
                 });
-
-
             }
         });
     }
@@ -89,7 +91,17 @@ public class MainActivity extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this,"yeP",Toast.LENGTH_SHORT).show();
+                WDS.getCityForecastByName(dataInput.getText().toString(), new WeatherDataService.VRL_FORECAST_BY_NAME() {
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(MainActivity.this,message,Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onResponse(WeatherReportModel wrm) {
+                        Report.setText(wrm.toString());
+                    }
+                });
             }
         });
     }
