@@ -52,21 +52,23 @@ public class WeatherReportModel {
 
     @Override
     public String toString() {
-        return "WeatherReportModel{" +
-                "coord=" + coord +
-                ", weather=" + weather +
-                ", base='" + base + '\'' +
-                ", main=" + main +
-                ", visibility=" + visibility +
-                ", wind=" + wind +
-                ", clouds=" + clouds +
-                ", dt=" + dt +
-                ", sys=" + sys +
-                ", timezone=" + timezone +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", cod=" + cod +
-                '}';
+
+        return "name="+name;
+// calm down      return "WeatherReportModel{" +
+//                "coord=" + coord +
+//                ", weather=" + weather +
+//                ", base='" + base + '\'' +
+//                ", main=" + main +
+//                ", visibility=" + visibility +
+//                ", wind=" + wind +
+//                ", clouds=" + clouds +
+//                ", dt=" + dt +
+//                ", sys=" + sys +
+//                ", timezone=" + timezone +
+//                ", id=" + id +
+//                ", name='" + name + '\'' +
+//                ", cod=" + cod +
+//                '}';
     }
 
     public JSONObject getCoord() {

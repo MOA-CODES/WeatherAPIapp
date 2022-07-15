@@ -67,7 +67,18 @@ public class MainActivity extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WDS.getCityForecastByID("5308655");
+                WDS.getCityForecastByID(dataInput.getText().toString(), new WeatherDataService.VRL_FORECAST_BY_ID() {
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(MainActivity.this,message,Toast.LENGTH_LONG).show();
+
+                    }
+
+                    @Override
+                    public void onResponse(WeatherReportModel wrm) {
+                        Toast.makeText(MainActivity.this, wrm.getName().toString(),Toast.LENGTH_LONG).show();
+                    }
+                });
 
 
             }
